@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 public class AddressBookMain {
 	private static final Logger log = LogManager.getLogger(AddressBookMain.class);
-
 	private LinkedList<ContactDetails> contactLinkedList;
 	public static Multimap<String, ContactDetails> cityToContactEntryMap = ArrayListMultimap.create();
 	public static Multimap<String, ContactDetails> stateToContactEntryMap = ArrayListMultimap.create();
@@ -136,6 +136,22 @@ public class AddressBookMain {
 		log.info(contactValues);
 	}
 
+	private static void showContactGroupedByCity() {
+		Set<String> listOfCity = cityToContactEntryMap.keySet();
+		for(String cityName : listOfCity) {
+			log.info("Contact Entries for CITY: " + cityName);
+			searchContactByCity(cityName);
+		}
+	}
+
+	private static void showContactGroupedByState() {
+		Set<String> listOfState = stateToContactEntryMap.keySet();
+		for(String stateName : listOfState) {
+			log.info("Contact Entries for STATE: " + stateName);
+			searchContactByState(stateName);
+		}
+	}
+
 	public static void main(String[] args) {
 		Scanner takeInput = new Scanner(System.in);
 		Map<String, AddressBookMain> addressBookMap = new HashMap<>();
@@ -152,7 +168,7 @@ public class AddressBookMain {
 		}
 		int exitFlag = 0;
 		do {
-			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.SEARCH BY CITY\n5.SEARCH BY STATE\n6.EXIT");
+			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.SEARCH BY CITY\n5.SEARCH BY STATE\n6.SHOW CONTACTS BY CITY\n7.SHOW CONTACTS BY STATE\n8.EXIT");
 			int menuChoice = takeInput.nextInt();
 			takeInput.nextLine();
 			switch(menuChoice) {
@@ -170,9 +186,12 @@ public class AddressBookMain {
 			String state = takeInput.nextLine();
 			searchContactByState(state);
 			break;
+			case 6:showContactGroupedByCity();
+			break;
+			case 7:showContactGroupedByState();
+			break;
 			default: exitFlag = 1;
 			}
 		} while(exitFlag == 0);
-
 	}
 }
