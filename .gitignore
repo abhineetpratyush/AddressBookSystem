@@ -1,0 +1,9 @@
+*.classpath
+*.project
+*.prefs
+*.log
+*.class
+logs/
+.settings/
+target/
+pom.xml
