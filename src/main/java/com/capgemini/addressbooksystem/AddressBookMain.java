@@ -1,17 +1,22 @@
 package com.capgemini.addressbooksystem;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 public class AddressBookMain {
 	private static final Logger log = LogManager.getLogger(AddressBookMain.class);
 
 	private LinkedList<ContactDetails> contactLinkedList;
+	public static Multimap<String, ContactDetails> cityToContactEntryMap = ArrayListMultimap.create();
+	public static Multimap<String, ContactDetails> stateToContactEntryMap = ArrayListMultimap.create();
+
 	private AddressBookMain() {
 		contactLinkedList = new LinkedList<>();
 	}
@@ -43,6 +48,8 @@ public class AddressBookMain {
 			}while(exitFlag == 0);
 			log.info("Address: ");
 			String address = takeInput.nextLine();
+			log.info("City: ");
+			String city = takeInput.nextLine();
 			log.info("State: ");
 			String state = takeInput.nextLine();
 			log.info("ZIP: " );
@@ -53,8 +60,10 @@ public class AddressBookMain {
 			log.info("Email ID: ");
 			String emailId = takeInput.nextLine();
 			ContactDetails contactDetail = new ContactDetails();
-			contactDetail.setContactDetails(firstName, lastName, address, state, zip, phoneNo, emailId);
+			contactDetail.setContactDetails(firstName, lastName, address, city, state, zip, phoneNo, emailId);
 			contactLinkedList.add(contactDetail);
+			cityToContactEntryMap.put(city, contactDetail);
+			stateToContactEntryMap.put(state, contactDetail);
 		}
 	}
 
@@ -66,6 +75,8 @@ public class AddressBookMain {
 		String lastName = takeInput.nextLine();
 		log.info("Edited Address: ");
 		String address = takeInput.nextLine();
+		log.info("Edited City: ");
+		String city = takeInput.nextLine();
 		log.info("Edited State: ");
 		String state = takeInput.nextLine();
 		log.info("Edited ZIP: " );
@@ -81,7 +92,7 @@ public class AddressBookMain {
 				if(value.contactLinkedList.get(i).firstName.equals(firstName) && value.contactLinkedList.get(i).lastName.equals(lastName))
 				{
 					ContactDetails contactDetail = new ContactDetails();
-					contactDetail.setContactDetails(firstName, lastName, address, state, zip, phoneNo, emailId);
+					contactDetail.setContactDetails(firstName, lastName, address, city, state, zip, phoneNo, emailId);
 					value.contactLinkedList.set(i, contactDetail);
 				}
 		}
@@ -101,7 +112,7 @@ public class AddressBookMain {
 		}
 	}
 
-	public static void deleteContactDetailsSearchedByName(Map<String, AddressBookMain> addressBookMap) {
+	private static void deleteContactDetailsSearchedByName(Map<String, AddressBookMain> addressBookMap) {
 		Scanner takeInput = new Scanner(System.in);
 		log.info("Enter First Name of person whose record is to be deleted: ");
 		String firstName = takeInput.nextLine();
@@ -113,6 +124,16 @@ public class AddressBookMain {
 				if(value.contactLinkedList.get(i).firstName.equals(firstName) && value.contactLinkedList.get(i).lastName.equals(lastName))
 					value.contactLinkedList.remove(i);
 		}
+	}
+
+	private static void searchContactByCity(String city) {
+		Collection<ContactDetails> contactValues = cityToContactEntryMap.get(city);
+		log.info(contactValues);
+	}
+
+	private static void searchContactByState(String state) {
+		Collection<ContactDetails> contactValues = stateToContactEntryMap.get(state);
+		log.info(contactValues);
 	}
 
 	public static void main(String[] args) {
@@ -131,14 +152,23 @@ public class AddressBookMain {
 		}
 		int exitFlag = 0;
 		do {
-			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.EXIT");
+			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.SEARCH BY CITY\n5.SEARCH BY STATE\n6.EXIT");
 			int menuChoice = takeInput.nextInt();
+			takeInput.nextLine();
 			switch(menuChoice) {
 			case 1: editContactFromAddressBook(addressBookMap);
 			break;
 			case 2: deleteContactDetailsSearchedByName(addressBookMap);
 			break;
 			case 3: displayContactDetailsSearchedByName(addressBookMap);
+			break;
+			case 4: log.info("Enter city: ");
+			String city = takeInput.nextLine();
+			searchContactByCity(city);
+			break;
+			case 5: log.info("Enter state: ");
+			String state = takeInput.nextLine();
+			searchContactByState(state);
 			break;
 			default: exitFlag = 1;
 			}
