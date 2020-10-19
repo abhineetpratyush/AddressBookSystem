@@ -1,5 +1,6 @@
 package com.capgemini.addressbooksystem;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,33 +8,35 @@ import org.apache.logging.log4j.Logger;
 public class AddressBookMain {
 	private static final Logger log = LogManager.getLogger(AddressBookMain.class);
 
-	private int numOfContact = 0;
-	private ContactDetails[] contactArray;
+	private ArrayList<ContactDetails> contactArrayList;
 	private AddressBookMain() {
-		contactArray = new ContactDetails[5];
+		contactArrayList = new ArrayList<>(); 
 	}
 
 	private void addContactDetails(String firstName, String lastName, String address, String state, int zip, long phoneNo, String emailId) {
-		contactArray[numOfContact] = new ContactDetails();
-		contactArray[numOfContact].setContactDetails(firstName, lastName, address, state, zip, phoneNo, emailId);
-		numOfContact++;
+		ContactDetails contactDetail = new ContactDetails();
+		contactDetail.setContactDetails(firstName, lastName, address, state, zip, phoneNo, emailId);
+		contactArrayList.add(contactDetail);
 	}
 
 	private void editContactDetails(String firstName, String lastName, String address, String state, int zip, long phoneNo, String emailId) {
-		for(int i = 0; i < numOfContact; i++) {
-			if(contactArray[i].firstName.equals(firstName) && contactArray[i].lastName.equals(lastName)) {
-				contactArray[i].setContactDetails(firstName, lastName, address, state, zip, phoneNo, emailId);
+		for(int i = 0; i < contactArrayList.size(); i++) {
+			ContactDetails contactDetail = contactArrayList.get(i);
+			if(contactDetail.firstName.equals(firstName) && contactDetail.lastName.equals(lastName)) {
+				contactDetail.setContactDetails(firstName, lastName, address, state, zip, phoneNo, emailId);
+				contactArrayList.set(i, contactDetail);
 				log.info("Address changed");
-				log.info(contactArray[i]);
+				log.info(contactArrayList.get(i));
 				break;
 			}
 		}
 	}
 
 	private void deleteContactDetails(String firstName, String lastName) {
-		for(int i = 0; i < numOfContact; i++) {
-			if(contactArray[i].firstName.equals(firstName) && contactArray[i].lastName.equals(lastName)) {
-				contactArray[i] = null;
+		for(int i = 0; i < contactArrayList.size(); i++) {
+			ContactDetails contactDetail = contactArrayList.get(i);
+			if(contactDetail.firstName.equals(firstName) && contactDetail.lastName.equals(lastName)) {
+				contactArrayList.remove(i);
 				log.info("Contact deleted");
 				break;
 			}
@@ -43,7 +46,7 @@ public class AddressBookMain {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		AddressBookMain addressBook = new AddressBookMain();
-		log.info("No. of contact details to enter (upto 5): ");
+		log.info("No. of contact details to enter: ");
 		int numOfContact = sc.nextInt();
 		sc.nextLine();
 		//adding
