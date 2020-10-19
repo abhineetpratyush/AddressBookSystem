@@ -22,10 +22,25 @@ public class AddressBookMain {
 		int numOfEntries = takeInput.nextInt();
 		takeInput.nextLine();
 		for(int contactIndex = 0; contactIndex < numOfEntries; contactIndex++) {
-			log.info("First Name: ");
-			String firstName = takeInput.nextLine();
-			log.info("Last Name: ");
-			String lastName = takeInput.nextLine();
+			String firstName, lastName;
+			int exitFlag;
+			do{
+				int counter = 0;
+				log.info("First Name: ");
+				firstName = takeInput.nextLine();
+				log.info("Last Name: ");
+				lastName = takeInput.nextLine();
+				for(int i = 0; i < contactIndex; i++) 
+					if(contactLinkedList.get(i).firstName.equals(firstName) && contactLinkedList.get(i).lastName.equals(lastName)) {
+						counter++;
+					}
+				if(counter != 0) {
+					log.info("This name already exists! Please enter again");
+					exitFlag = 0;
+				}
+				else
+					exitFlag = 1;
+			}while(exitFlag == 0);
 			log.info("Address: ");
 			String address = takeInput.nextLine();
 			log.info("State: ");
@@ -63,7 +78,7 @@ public class AddressBookMain {
 		for (Map.Entry<String, AddressBookMain> entry : addressBookMap.entrySet()) {
 			AddressBookMain value = entry.getValue();
 			for(int i = 0; i < value.contactLinkedList.size(); i++) 
-				if(value.contactLinkedList.get(i).firstName.contains(firstName) && value.contactLinkedList.get(i).lastName.contains(lastName))
+				if(value.contactLinkedList.get(i).firstName.equals(firstName) && value.contactLinkedList.get(i).lastName.equals(lastName))
 				{
 					ContactDetails contactDetail = new ContactDetails();
 					contactDetail.setContactDetails(firstName, lastName, address, state, zip, phoneNo, emailId);
@@ -81,7 +96,7 @@ public class AddressBookMain {
 		for (Map.Entry<String, AddressBookMain> entry : addressBookMap.entrySet()) {
 			AddressBookMain value = entry.getValue();
 			for(int i = 0; i < value.contactLinkedList.size(); i++) 
-				if(value.contactLinkedList.get(i).firstName.contains(firstName) && value.contactLinkedList.get(i).lastName.contains(lastName))
+				if(value.contactLinkedList.get(i).firstName.equals(firstName) && value.contactLinkedList.get(i).lastName.equals(lastName))
 					log.info(value.contactLinkedList.get(i));
 		}
 	}
@@ -95,7 +110,7 @@ public class AddressBookMain {
 		for (Map.Entry<String, AddressBookMain> entry : addressBookMap.entrySet()) {
 			AddressBookMain value = entry.getValue();
 			for(int i = 0; i < value.contactLinkedList.size(); i++) 
-				if(value.contactLinkedList.get(i).firstName.contains(firstName) && value.contactLinkedList.get(i).lastName.contains(lastName))
+				if(value.contactLinkedList.get(i).firstName.equals(firstName) && value.contactLinkedList.get(i).lastName.equals(lastName))
 					value.contactLinkedList.remove(i);
 		}
 	}
