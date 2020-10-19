@@ -30,12 +30,23 @@ public class AddressBookMain {
 		}
 	}
 
+	private void deleteContactDetails(String firstName, String lastName) {
+		for(int i = 0; i < numOfContact; i++) {
+			if(contactArray[i].firstName.equals(firstName) && contactArray[i].lastName.equals(lastName)) {
+				contactArray[i] = null;
+				log.info("Contact deleted");
+				break;
+			}
+		} 
+	}
+
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		AddressBookMain addressBook = new AddressBookMain();
 		log.info("No. of contact details to enter (upto 5): ");
 		int numOfContact = sc.nextInt();
 		sc.nextLine();
+		//adding
 		for(int i = 0; i < numOfContact; i++) {
 			log.info("First Name: ");
 			String firstName = sc.nextLine();
@@ -54,6 +65,8 @@ public class AddressBookMain {
 			String emailId = sc.nextLine();
 			addressBook.addContactDetails(firstName, lastName, address, state, zip, phoneNo, emailId);
 		}
+
+		//editing
 		log.info("Enter details for contact record you want to edit");
 		log.info("First Name: ");
 		String firstName = sc.nextLine();
@@ -71,5 +84,12 @@ public class AddressBookMain {
 		log.info("Email ID: ");
 		String emailId = sc.nextLine();
 		addressBook.editContactDetails(firstName, lastName, address, state, zip, phoneNo, emailId);
+
+		//deleting
+		log.info("Enter first name of contact to be deleted: ");
+		firstName = sc.nextLine();
+		log.info("Enter last name of contact to be deleted: ");
+		lastName = sc.nextLine();
+		addressBook.deleteContactDetails(firstName, lastName);		
 	}
 }
