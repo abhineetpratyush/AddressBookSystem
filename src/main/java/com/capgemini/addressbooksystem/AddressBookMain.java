@@ -1,5 +1,7 @@
 package com.capgemini.addressbooksystem;
 
+import java.util.Scanner;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,7 +32,23 @@ public class AddressBookMain {
 	}
 
 	public static void main(String[] args) {
-		AddressBookMain contact = new AddressBookMain("Abhineet", "Pratyush", "EPIP, Bengaluru", "Karnataka", 123456, 1234567891, "xyz@gmail.com");
+		Scanner sc = new Scanner(System.in);
+		log.info("First Name: ");
+		String firstName = sc.nextLine();
+		log.info("Last Name: ");
+		String lastName = sc.nextLine();
+		log.info("Address: ");
+		String address = sc.nextLine();
+		log.info("State: ");
+		String state = sc.nextLine();
+		log.info("ZIP: " );
+		int zip = sc.nextInt();
+		log.info("Phone No: ");
+		long phoneNo = sc.nextLong();
+		sc.nextLine();
+		log.info("Email ID: ");
+		String emailId = sc.nextLine();
+		AddressBookMain contact = new AddressBookMain(firstName, lastName, address, state, zip, phoneNo, emailId);
 		log.info(contact);
 	}
 }
