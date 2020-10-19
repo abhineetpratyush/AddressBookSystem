@@ -1,18 +1,19 @@
 package com.capgemini.addressbooksystem;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 public class AddressBookMain {
 	private static final Logger log = LogManager.getLogger(AddressBookMain.class);
+
 	private LinkedList<ContactDetails> contactLinkedList;
 	public static Multimap<String, ContactDetails> cityToContactEntryMap = ArrayListMultimap.create();
 	public static Multimap<String, ContactDetails> stateToContactEntryMap = ArrayListMultimap.create();
@@ -91,9 +92,13 @@ public class AddressBookMain {
 			for(int i = 0; i < value.contactLinkedList.size(); i++) 
 				if(value.contactLinkedList.get(i).firstName.equals(firstName) && value.contactLinkedList.get(i).lastName.equals(lastName))
 				{
+					cityToContactEntryMap.remove(value.contactLinkedList.get(i).city, value.contactLinkedList.get(i));
+					stateToContactEntryMap.remove(value.contactLinkedList.get(i).state, value.contactLinkedList.get(i));
 					ContactDetails contactDetail = new ContactDetails();
 					contactDetail.setContactDetails(firstName, lastName, address, city, state, zip, phoneNo, emailId);
 					value.contactLinkedList.set(i, contactDetail);
+					cityToContactEntryMap.put(city, contactDetail);
+					stateToContactEntryMap.put(state, contactDetail);
 				}
 		}
 	}
@@ -121,8 +126,11 @@ public class AddressBookMain {
 		for (Map.Entry<String, AddressBookMain> entry : addressBookMap.entrySet()) {
 			AddressBookMain value = entry.getValue();
 			for(int i = 0; i < value.contactLinkedList.size(); i++) 
-				if(value.contactLinkedList.get(i).firstName.equals(firstName) && value.contactLinkedList.get(i).lastName.equals(lastName))
+				if(value.contactLinkedList.get(i).firstName.equals(firstName) && value.contactLinkedList.get(i).lastName.equals(lastName)) {
+					cityToContactEntryMap.remove(value.contactLinkedList.get(i).city, value.contactLinkedList.get(i));
+					stateToContactEntryMap.remove(value.contactLinkedList.get(i).state, value.contactLinkedList.get(i));
 					value.contactLinkedList.remove(i);
+				}
 		}
 	}
 
@@ -152,6 +160,22 @@ public class AddressBookMain {
 		}
 	}
 
+	private static void getCountByCity() {
+		Set<String> listOfCity = cityToContactEntryMap.keySet();
+		for(String cityName : listOfCity) {
+			Collection<ContactDetails> contactValues = cityToContactEntryMap.get(cityName);
+			log.info("No of contact entries for CITY " + cityName + " " + contactValues.size());
+		}
+	}
+
+	private static void getCountByState() {
+		Set<String> listOfState = stateToContactEntryMap.keySet();
+		for(String stateName : listOfState) {
+			Collection<ContactDetails> contactValues = stateToContactEntryMap.get(stateName);
+			log.info("No of contact entries for STATE " + stateName + " " + contactValues.size());
+		}
+	}
+
 	public static void main(String[] args) {
 		Scanner takeInput = new Scanner(System.in);
 		Map<String, AddressBookMain> addressBookMap = new HashMap<>();
@@ -168,7 +192,7 @@ public class AddressBookMain {
 		}
 		int exitFlag = 0;
 		do {
-			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.SEARCH BY CITY\n5.SEARCH BY STATE\n6.SHOW CONTACTS BY CITY\n7.SHOW CONTACTS BY STATE\n8.EXIT");
+			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.SEARCH BY CITY\n5.SEARCH BY STATE\n6.SHOW CONTACTS BY CITY\n7.SHOW CONTACTS BY STATE\n8.CONTACT COUNT BY CITY\n9.CONTACT COUNT BY STATE\n10.EXIT");
 			int menuChoice = takeInput.nextInt();
 			takeInput.nextLine();
 			switch(menuChoice) {
@@ -189,6 +213,10 @@ public class AddressBookMain {
 			case 6:showContactGroupedByCity();
 			break;
 			case 7:showContactGroupedByState();
+			break;
+			case 8: getCountByCity();
+			break;
+			case 9: getCountByState();
 			break;
 			default: exitFlag = 1;
 			}
