@@ -122,8 +122,33 @@ public class AddressBookMain {
 		AddressBookMain addressBookToSort = addressBookMap.get(addressBookNameToSort);
 		List<ContactDetails> unsortedContactDetails =addressBookToSort.contactLinkedList;
 		List<ContactDetails> sortedContactDetails =  unsortedContactDetails.stream()
-				.sorted(new SortByName())
-				.collect(Collectors.toList());
+													.sorted(new SortByName())
+													.collect(Collectors.toList());
+		log.info(sortedContactDetails);
+	}
+	private static void sortContactEntriesByCity(String addressBookNameToSort) {
+		AddressBookMain addressBookToSort = addressBookMap.get(addressBookNameToSort);
+		List<ContactDetails> unsortedContactDetails =addressBookToSort.contactLinkedList;
+		List<ContactDetails> sortedContactDetails =  unsortedContactDetails.stream()
+													.sorted(new SortByCity())
+													.collect(Collectors.toList());
+		log.info(sortedContactDetails);
+	}
+	private static void sortContactEntriesByState(String addressBookNameToSort) {
+		AddressBookMain addressBookToSort = addressBookMap.get(addressBookNameToSort);
+		List<ContactDetails> unsortedContactDetails =addressBookToSort.contactLinkedList;
+		List<ContactDetails> sortedContactDetails =  unsortedContactDetails.stream()
+													.sorted(new SortByState())
+													.collect(Collectors.toList());
+		log.info(sortedContactDetails);
+	}
+
+	private static void sortContactEntriesByZip(String addressBookNameToSort) {
+		AddressBookMain addressBookToSort = addressBookMap.get(addressBookNameToSort);
+		List<ContactDetails> unsortedContactDetails =addressBookToSort.contactLinkedList;
+		List<ContactDetails> sortedContactDetails =  unsortedContactDetails.stream()
+													.sorted(new SortByZip())
+													.collect(Collectors.toList());
 		log.info(sortedContactDetails);
 	}
 
@@ -201,7 +226,7 @@ public class AddressBookMain {
 		}
 		int exitFlag = 0;
 		do {
-			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.SEARCH BY CITY\n5.SEARCH BY STATE\n6.SHOW CONTACTS BY CITY\n7.SHOW CONTACTS BY STATE\n8.CONTACT COUNT BY CITY\n9.CONTACT COUNT BY STATE\n10.SORT CONTACT ENTRIES BY NAME\n11.EXIT");
+			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.SEARCH BY CITY\n5.SEARCH BY STATE\n6.SHOW CONTACTS BY CITY\n7.SHOW CONTACTS BY STATE\n8.CONTACT COUNT BY CITY\n9.CONTACT COUNT BY STATE\n10.SORT CONTACT ENTRIES BY NAME\n11.SORT CONTACT ENTRIES BY CITY\n12.SORT CONTACT ENTRIES BY STATE\n13.SORT CONTACT ENTRIES BY ZIP\n14.EXIT");
 			int menuChoice = takeInput.nextInt();
 			takeInput.nextLine();
 			switch(menuChoice) {
@@ -230,6 +255,18 @@ public class AddressBookMain {
 			case 10: log.info("Enter address book name whose sorted contact details you want: "); 
 			String addressBookNameToSort = takeInput.nextLine();
 			sortContactEntriesByName(addressBookNameToSort);
+			break;
+			case 11: log.info("Enter address book name whose sorted contact details you want: "); 
+			addressBookNameToSort = takeInput.nextLine();
+			sortContactEntriesByCity(addressBookNameToSort);
+			break;
+			case 12: log.info("Enter address book name whose sorted contact details you want: "); 
+			addressBookNameToSort = takeInput.nextLine();
+			sortContactEntriesByState(addressBookNameToSort);
+			break;
+			case 13: log.info("Enter address book name whose sorted contact details you want: "); 
+			addressBookNameToSort = takeInput.nextLine();
+			sortContactEntriesByZip(addressBookNameToSort);
 			break;
 			default: exitFlag = 1;
 			}
