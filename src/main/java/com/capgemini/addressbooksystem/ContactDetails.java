@@ -3,16 +3,18 @@ package com.capgemini.addressbooksystem;
 public class ContactDetails {
 	public String firstName;
 	public String lastName;
-	private String address; 
+	public String fullName;
+	public String address; 
 	public String city;
 	public String state;
-	private int zip;
-	private long phoneNo;
-	private String emailId;
+	public int zip;
+	public long phoneNo;
+	public String emailId;
 
 	public void setContactDetails(String firstName, String lastName, String address, String city, String state, int zip, long phoneNo, String emailId) { 
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.fullName = firstName.concat(lastName);
 		this.address = address;
 		this.city = city;
 		this.state = state;

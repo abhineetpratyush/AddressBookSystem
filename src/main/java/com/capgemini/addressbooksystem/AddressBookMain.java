@@ -3,9 +3,11 @@ package com.capgemini.addressbooksystem;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ArrayListMultimap;
@@ -13,11 +15,10 @@ import com.google.common.collect.Multimap;
 
 public class AddressBookMain {
 	private static final Logger log = LogManager.getLogger(AddressBookMain.class);
-
 	private LinkedList<ContactDetails> contactLinkedList;
 	public static Multimap<String, ContactDetails> cityToContactEntryMap = ArrayListMultimap.create();
 	public static Multimap<String, ContactDetails> stateToContactEntryMap = ArrayListMultimap.create();
-
+	public static Map<String, AddressBookMain> addressBookMap = new HashMap<>();
 	private AddressBookMain() {
 		contactLinkedList = new LinkedList<>();
 	}
@@ -68,7 +69,7 @@ public class AddressBookMain {
 		}
 	}
 
-	private static void editContactFromAddressBook(Map<String, AddressBookMain> addressBookMap) {
+	private static void editContactFromAddressBook() {
 		Scanner takeInput = new Scanner(System.in);
 		log.info("Original First Name of the person whose record is to be edited: ");
 		String firstName = takeInput.nextLine();
@@ -103,7 +104,7 @@ public class AddressBookMain {
 		}
 	}
 
-	private static void displayContactDetailsSearchedByName(Map<String, AddressBookMain> addressBookMap) {
+	private static void displayContactDetailsSearchedByName() {
 		Scanner takeInput = new Scanner(System.in);
 		log.info("Enter First Name of person whose record is to be displayed: ");
 		String firstName = takeInput.nextLine();
@@ -117,7 +118,16 @@ public class AddressBookMain {
 		}
 	}
 
-	private static void deleteContactDetailsSearchedByName(Map<String, AddressBookMain> addressBookMap) {
+	private static void sortContactEntriesByName(String addressBookNameToSort) {
+		AddressBookMain addressBookToSort = addressBookMap.get(addressBookNameToSort);
+		List<ContactDetails> unsortedContactDetails =addressBookToSort.contactLinkedList;
+		List<ContactDetails> sortedContactDetails =  unsortedContactDetails.stream()
+				.sorted(new SortByName())
+				.collect(Collectors.toList());
+		log.info(sortedContactDetails);
+	}
+
+	private static void deleteContactDetailsSearchedByName() {
 		Scanner takeInput = new Scanner(System.in);
 		log.info("Enter First Name of person whose record is to be deleted: ");
 		String firstName = takeInput.nextLine();
@@ -178,7 +188,6 @@ public class AddressBookMain {
 
 	public static void main(String[] args) {
 		Scanner takeInput = new Scanner(System.in);
-		Map<String, AddressBookMain> addressBookMap = new HashMap<>();
 		log.info("How many address books need to be created? ");
 		int noOfAddressBooks = takeInput.nextInt();
 		takeInput.nextLine();
@@ -192,15 +201,15 @@ public class AddressBookMain {
 		}
 		int exitFlag = 0;
 		do {
-			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.SEARCH BY CITY\n5.SEARCH BY STATE\n6.SHOW CONTACTS BY CITY\n7.SHOW CONTACTS BY STATE\n8.CONTACT COUNT BY CITY\n9.CONTACT COUNT BY STATE\n10.EXIT");
+			log.info("Choose an option\n1.EDIT\n2.DELETE\n3.DISPLAY\n4.SEARCH BY CITY\n5.SEARCH BY STATE\n6.SHOW CONTACTS BY CITY\n7.SHOW CONTACTS BY STATE\n8.CONTACT COUNT BY CITY\n9.CONTACT COUNT BY STATE\n10.SORT CONTACT ENTRIES BY NAME\n11.EXIT");
 			int menuChoice = takeInput.nextInt();
 			takeInput.nextLine();
 			switch(menuChoice) {
-			case 1: editContactFromAddressBook(addressBookMap);
+			case 1: editContactFromAddressBook();
 			break;
-			case 2: deleteContactDetailsSearchedByName(addressBookMap);
+			case 2: deleteContactDetailsSearchedByName();
 			break;
-			case 3: displayContactDetailsSearchedByName(addressBookMap);
+			case 3: displayContactDetailsSearchedByName();
 			break;
 			case 4: log.info("Enter city: ");
 			String city = takeInput.nextLine();
@@ -217,6 +226,10 @@ public class AddressBookMain {
 			case 8: getCountByCity();
 			break;
 			case 9: getCountByState();
+			break;
+			case 10: log.info("Enter address book name whose sorted contact details you want: "); 
+			String addressBookNameToSort = takeInput.nextLine();
+			sortContactEntriesByName(addressBookNameToSort);
 			break;
 			default: exitFlag = 1;
 			}
