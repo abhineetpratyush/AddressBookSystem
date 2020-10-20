@@ -25,6 +25,6 @@ public class ContactDetails {
 
 	@Override
 	public String toString() {
-		return "Name: " + firstName + " " + lastName + " Address: " + address + " City: " + city + " State: " + state + " Zip: " + zip + " Phone No: " + phoneNo + " Email: " + emailId;
+		return firstName + " " + lastName + ", " + address + ", " + city + ", " + state + ", " + zip + ", " + phoneNo + ", " + emailId;
 	}
 }
