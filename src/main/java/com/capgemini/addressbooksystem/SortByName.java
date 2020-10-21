@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 class SortByName implements Comparator<ContactDetails> {
 	public int compare(ContactDetails personOne, ContactDetails personTwo) {		
-		return personOne.fullName.compareTo(personTwo.fullName);
+		return personOne.firstName.concat(personOne.lastName).compareTo(personTwo.firstName.concat(personTwo.lastName));
 	}
 }
 

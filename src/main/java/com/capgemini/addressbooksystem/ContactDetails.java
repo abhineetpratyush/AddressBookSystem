@@ -7,7 +7,6 @@ public class ContactDetails {
 	public String firstName;
 	@CsvBindByName
 	public String lastName;
-	public String fullName;
 	@CsvBindByName
 	public String address;
 	@CsvBindByName
@@ -24,7 +23,6 @@ public class ContactDetails {
 	public void setContactDetails(String firstName, String lastName, String address, String city, String state, int zip, long phoneNo, String emailId) { 
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.fullName = firstName.concat(lastName);
 		this.address = address;
 		this.city = city;
 		this.state = state;
@@ -47,14 +45,6 @@ public class ContactDetails {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
 	}
 
 	public String getAddress() {

@@ -1,5 +1,6 @@
 package com.capgemini.addressbooksystem;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
@@ -36,6 +37,24 @@ public class AddressBookFileTest {
 		List<ContactDetails> contactList = Arrays.asList(new ContactDetails[] {personOne, personTwo});
 		AddressBookToCSV.createCSVFile(contactList, "./src/main/resources/csv-file-from-addressbook.csv");
 		int numOfContactEntriesMade = CSVToAddressBook.createAddressBook("./src/main/resources/csv-file-from-addressbook.csv");
+		Assert.assertEquals(2, numOfContactEntriesMade);
+	}
+	
+	@Test
+	public void givenJsonFile_WhenAddedToAddressBook_ShouldReturnCountOf2() {
+		int numOfContactEntriesMade = JsonFileToAddressBook.createAddressBook("./src/main/resources/contacts-json-file.json");
+		Assert.assertEquals(2, numOfContactEntriesMade);
+	}
+	
+	@Test
+	public void given2ContactsDetails_WhenWrittenToJsonFile_ShouldPassTheTest() throws IOException {
+		ContactDetails personOne = new ContactDetails();
+		personOne.setContactDetails("Abhineet", "Pratyush", "XYZ", "Ranchi", "Jharkhand", 834003, 1234567891, "abc@gmail.com");
+		ContactDetails personTwo = new ContactDetails();
+		personTwo.setContactDetails("Ram", "Sharma", "LMN", "Pune", "Maharashtra", 123456, 1112345678, "ram@gmail.com");
+		List<ContactDetails> contactList = Arrays.asList(new ContactDetails[] {personOne, personTwo});
+		AddressBookToJsonFile.createJsonFile(contactList, "./src/main/resources/json-file-from-addressbook.json");
+		int numOfContactEntriesMade = JsonFileToAddressBook.createAddressBook("./src/main/resources/json-file-from-addressbook.json");
 		Assert.assertEquals(2, numOfContactEntriesMade);
 	}
 }

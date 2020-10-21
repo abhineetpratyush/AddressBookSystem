@@ -1,0 +1,22 @@
+[
+{
+"firstName": "Abhineet",
+"lastName": "Pratyush",
+"address": "xyz",
+"city": "ranchi",
+"state": "jharkhand",
+"zip": 810564,
+"phoneNo": 1234567891,
+"emailId": "apr@gmail.com"
+},
+{
+"firstName": "Dhananjay",
+"lastName": "Bhosale",
+"address": "22-B",
+"city": "Madrid",
+"state": "Siesta",
+"zip": 151547,
+"phoneNo": 1234567891,
+"emailId": "apr@gmail.com"
+}
+]

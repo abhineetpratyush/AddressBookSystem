@@ -13,7 +13,7 @@ public class CSVToAddressBook {
 		AddressBookMain addressBook = new AddressBookMain();
 		try {
 			Reader reader = Files.newBufferedReader(Paths.get(contactDetailsCSVFilePath)); 
-			CsvToBean<ContactDetails> csvToBean = new CsvToBeanBuilder(reader)
+			CsvToBean<ContactDetails> csvToBean = new CsvToBeanBuilder<ContactDetails>(reader)
 					.withType(ContactDetails.class)
 					.withIgnoreLeadingWhiteSpace(true)
 					.build();

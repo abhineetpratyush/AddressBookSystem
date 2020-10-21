@@ -14,6 +14,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 public class AddressBookMain {
+	private static Scanner takeInput = new Scanner(System.in);
 	private static final Logger log = LogManager.getLogger(AddressBookMain.class);
 	private LinkedList<ContactDetails> contactLinkedList;
 	public static Multimap<String, ContactDetails> cityToContactEntryMap = ArrayListMultimap.create();
@@ -36,7 +37,6 @@ public class AddressBookMain {
 	}
 
 	private void addContactToAddressBook(int addressBookNo) {
-		Scanner takeInput = new Scanner(System.in);
 		log.info("How many entries you want to make in Address Book " + addressBookNo);
 		int numOfEntries = takeInput.nextInt();
 		takeInput.nextLine();
@@ -82,7 +82,6 @@ public class AddressBookMain {
 	}
 
 	private static void editContactFromAddressBook() {
-		Scanner takeInput = new Scanner(System.in);
 		log.info("Original First Name of the person whose record is to be edited: ");
 		String firstName = takeInput.nextLine();
 		log.info("Original Last Name of the person whose record is to be edited: ");
@@ -117,7 +116,6 @@ public class AddressBookMain {
 	}
 
 	private static void displayContactDetailsSearchedByName() {
-		Scanner takeInput = new Scanner(System.in);
 		log.info("Enter First Name of person whose record is to be displayed: ");
 		String firstName = takeInput.nextLine();
 		log.info("Enter Last Name of person whose record is to be displayed: ");
@@ -167,7 +165,6 @@ public class AddressBookMain {
 	}
 
 	private static void deleteContactDetailsSearchedByName() {
-		Scanner takeInput = new Scanner(System.in);
 		log.info("Enter First Name of person whose record is to be deleted: ");
 		String firstName = takeInput.nextLine();
 		log.info("Enter Last Name of person whose record is to be deleted: ");
@@ -226,7 +223,6 @@ public class AddressBookMain {
 	}
 
 	public static void main(String[] args) {
-		Scanner takeInput = new Scanner(System.in);
 		log.info("How many address books need to be created? ");
 		int noOfAddressBooks = takeInput.nextInt();
 		takeInput.nextLine();
@@ -268,7 +264,7 @@ public class AddressBookMain {
 			break;
 			case 10: log.info("Enter address book name whose sorted contact details you want: "); 
 			String addressBookNameToSort = takeInput.nextLine();
-			//sortContactEntriesByName(addressBookNameToSort);
+			sortContactEntriesByName(addressBookNameToSort);
 			break;
 			case 11: log.info("Enter address book name whose sorted contact details you want: "); 
 			addressBookNameToSort = takeInput.nextLine();
