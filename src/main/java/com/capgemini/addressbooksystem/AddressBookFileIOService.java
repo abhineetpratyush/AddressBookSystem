@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AddressBookFileIOService {
-	public static String ADDRESSBOOK_FILE_NAME = "address-book.txt";
+	public static String ADDRESSBOOK_FILE_NAME = "./src/main/resources/address-book.txt";
 
 	public void writeContactDetails(List<ContactDetails> contactList) {
 		StringBuffer contactsBuffer = new StringBuffer();
