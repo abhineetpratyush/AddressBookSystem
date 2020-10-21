@@ -20,4 +20,22 @@ public class AddressBookFileTest {
 		Assert.assertEquals(personOne.toString(), contactListRead.get(0).toString());
 		Assert.assertEquals(personTwo.toString(), contactListRead.get(1).toString());
 	}
+	
+	@Test
+	public void givenCSVFileWithContactDetails_WhenInitializedIntoAddressBook_ShouldPassTheTest() {
+		int numOfContactEntriesMade = CSVToAddressBook.createAddressBook("./src/main/resources/list-of-contacts.csv");
+		Assert.assertEquals(3, numOfContactEntriesMade);
+	}
+	
+	@Test
+	public void given2ContactsDetails_WhenWrittenToCSVFile_ShouldPassTheTest() {
+		ContactDetails personOne = new ContactDetails();
+		personOne.setContactDetails("Abhineet", "Pratyush", "XYZ", "Ranchi", "Jharkhand", 834003, 1234567891, "abc@gmail.com");
+		ContactDetails personTwo = new ContactDetails();
+		personTwo.setContactDetails("Ram", "Sharma", "LMN", "Pune", "Maharashtra", 123456, 1112345678, "ram@gmail.com");
+		List<ContactDetails> contactList = Arrays.asList(new ContactDetails[] {personOne, personTwo});
+		AddressBookToCSV.createCSVFile(contactList, "./src/main/resources/csv-file-from-addressbook.csv");
+		int numOfContactEntriesMade = CSVToAddressBook.createAddressBook("./src/main/resources/csv-file-from-addressbook.csv");
+		Assert.assertEquals(2, numOfContactEntriesMade);
+	}
 }

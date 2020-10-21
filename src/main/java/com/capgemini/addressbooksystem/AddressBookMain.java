@@ -19,8 +19,20 @@ public class AddressBookMain {
 	public static Multimap<String, ContactDetails> cityToContactEntryMap = ArrayListMultimap.create();
 	public static Multimap<String, ContactDetails> stateToContactEntryMap = ArrayListMultimap.create();
 	public static Map<String, AddressBookMain> addressBookMap = new HashMap<>();
-	private AddressBookMain() {
+	public AddressBookMain() {
 		contactLinkedList = new LinkedList<>();
+	}
+
+	public LinkedList<ContactDetails> getContactLinkedList() {
+		return contactLinkedList;
+	}
+
+	public void setContactLinkedList(LinkedList<ContactDetails> contactLinkedList) {
+		this.contactLinkedList = contactLinkedList;
+	}
+	
+	public void addContactDirectlyToContactLinkedList(ContactDetails contactDetails) {
+		contactLinkedList.add(contactDetails);
 	}
 
 	private void addContactToAddressBook(int addressBookNo) {
@@ -126,6 +138,7 @@ public class AddressBookMain {
 													.collect(Collectors.toList());
 		log.info(sortedContactDetails);
 	}
+	
 	private static void sortContactEntriesByCity(String addressBookNameToSort) {
 		AddressBookMain addressBookToSort = addressBookMap.get(addressBookNameToSort);
 		List<ContactDetails> unsortedContactDetails =addressBookToSort.contactLinkedList;
@@ -134,6 +147,7 @@ public class AddressBookMain {
 													.collect(Collectors.toList());
 		log.info(sortedContactDetails);
 	}
+	
 	private static void sortContactEntriesByState(String addressBookNameToSort) {
 		AddressBookMain addressBookToSort = addressBookMap.get(addressBookNameToSort);
 		List<ContactDetails> unsortedContactDetails =addressBookToSort.contactLinkedList;
@@ -254,7 +268,7 @@ public class AddressBookMain {
 			break;
 			case 10: log.info("Enter address book name whose sorted contact details you want: "); 
 			String addressBookNameToSort = takeInput.nextLine();
-			sortContactEntriesByName(addressBookNameToSort);
+			//sortContactEntriesByName(addressBookNameToSort);
 			break;
 			case 11: log.info("Enter address book name whose sorted contact details you want: "); 
 			addressBookNameToSort = takeInput.nextLine();
