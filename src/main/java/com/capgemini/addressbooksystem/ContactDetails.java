@@ -19,6 +19,20 @@ public class ContactDetails {
 	public long phoneNo;
 	@CsvBindByName
 	public String emailId;
+	
+	public ContactDetails() {}
+	
+	public ContactDetails(String firstName, String lastName, String address, String city, String state, int zip,
+			long phoneNo, String emailId) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.phoneNo = phoneNo;
+		this.emailId = emailId;
+	}
 
 	public void setContactDetails(String firstName, String lastName, String address, String city, String state, int zip, long phoneNo, String emailId) { 
 		this.firstName = firstName;
