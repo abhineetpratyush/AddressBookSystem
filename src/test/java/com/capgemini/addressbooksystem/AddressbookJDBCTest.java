@@ -38,4 +38,13 @@ public class AddressbookJDBCTest {
 		List<ContactDetails> addressBookList = addressBookDBService.getAddressBookDataInDateRange(startDate, endDate);
 		Assert.assertEquals(2, addressBookList.size());
 	}
+	
+	@Test
+	public void givenCityOrState_ShouleRetrieveCorrespondingContactEntries() throws CustomJDBCException {
+		addressBookDBService.readContactsFromDB();
+		List<ContactDetails> addressBookListOnCity = addressBookDBService.getAddressBookDataOnCity("Ranchi");
+		List<ContactDetails> addressBookListOnState = addressBookDBService.getAddressBookDataOnState("Karnataka");
+		Assert.assertEquals(1, addressBookListOnCity.size());
+		Assert.assertEquals(2, addressBookListOnState.size());
+	}
 }

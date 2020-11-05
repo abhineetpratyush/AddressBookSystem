@@ -140,7 +140,29 @@ public class AddressBookDBService {
 				ResultSet resultSet = statement.executeQuery(sql);
 				return this.getAddressBookListFromResultSet(resultSet);
 			} catch (SQLException e) {
-				throw new CustomJDBCException(ExceptionType.SQL_EXCEPTION);
+				throw new CustomJDBCException(ExceptionType.UNABLE_TO_GET_CONTACTS_IN_DATE_RANGE);
 			}
+	}
+
+	public List<ContactDetails> getAddressBookDataOnCity(String city) throws CustomJDBCException {
+		String sql = String.format("select * from address_details where city = '%s'", city);
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet resultSet = statement.executeQuery(sql);
+			return this.getAddressBookListFromResultSet(resultSet);
+		} catch (SQLException e) {
+			throw new CustomJDBCException(ExceptionType.UNABLE_TO_GET_CONTACTS_IN_CITY);
+		}
+	}
+
+	public List<ContactDetails> getAddressBookDataOnState(String state) throws CustomJDBCException {
+		String sql = String.format("select * from address_details where state = '%s'", state);
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet resultSet = statement.executeQuery(sql);
+			return this.getAddressBookListFromResultSet(resultSet);
+		} catch (SQLException e) {
+			throw new CustomJDBCException(ExceptionType.UNABLE_TO_GET_CONTACTS_IN_STATE);
+		}
 	}
 }
