@@ -1,9 +1,11 @@
 package com.capgemini.addressbooksystem;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 
 public class AddressbookJDBCTest {
 	
@@ -26,5 +28,14 @@ public class AddressbookJDBCTest {
 		addressBookDBService.updateContactCity("Ram", "Ranchi");
 		boolean result = addressBookDBService.checkAddressBookInSyncWithDB("Ram");
 		Assert.assertTrue(result);
+	}
+	
+	@Test
+	public void givenDateRange_ReturnNoOfContactsAddedInTheRange() throws CustomJDBCException {
+		addressBookDBService.readContactsFromDB();
+		LocalDate startDate = LocalDate.parse("2018-01-01");
+		LocalDate endDate = LocalDate.parse("2019-04-04");
+		List<ContactDetails> addressBookList = addressBookDBService.getAddressBookDataInDateRange(startDate, endDate);
+		Assert.assertEquals(2, addressBookList.size());
 	}
 }

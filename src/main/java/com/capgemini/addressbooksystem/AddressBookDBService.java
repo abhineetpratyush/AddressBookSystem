@@ -6,10 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 
 public class AddressBookDBService {
 
@@ -127,5 +129,18 @@ public class AddressBookDBService {
 	public boolean checkAddressBookInSyncWithDB(String firstName) throws CustomJDBCException {
 		List<ContactDetails> addressBookList = getAddressBookEntriesFromDB(firstName);
 		return addressBookList.get(0).equals(getContact(firstName));
+	}
+
+	public List<ContactDetails> getAddressBookDataInDateRange(LocalDate startDate, LocalDate endDate) throws CustomJDBCException {
+			String sql = String.format("select * from address_details where date_added between "
+					+ "cast('%s' as date) and cast('%s' as date);",
+					startDate.toString(), endDate.toString());
+			try (Connection connection = this.getConnection()) {
+				Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				ResultSet resultSet = statement.executeQuery(sql);
+				return this.getAddressBookListFromResultSet(resultSet);
+			} catch (SQLException e) {
+				throw new CustomJDBCException(ExceptionType.SQL_EXCEPTION);
+			}
 	}
 }
