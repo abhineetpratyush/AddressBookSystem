@@ -12,7 +12,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 public class AddressBookDBService {
 
 	private List<ContactDetails> addressBookList = new ArrayList<>();
@@ -164,5 +163,53 @@ public class AddressBookDBService {
 		} catch (SQLException e) {
 			throw new CustomJDBCException(ExceptionType.UNABLE_TO_GET_CONTACTS_IN_STATE);
 		}
+	}
+
+	public void addContactEntryToDB(String firstName, String lastName, String emailId, String address, String city,
+			String state, int zip, long phoneNumber, String dateAdded, String addressBookName) throws CustomJDBCException {
+		Connection connection = null;
+		connection = this.getConnection();
+		try {
+			connection.setAutoCommit(false);
+		} catch (SQLException e1) {
+			throw new CustomJDBCException(ExceptionType.UNABLE_TO_SET_AUTO_COMMIT);
+		}
+		try(Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+			String sql = String.format("insert into address_details" +
+					" values ('%s', '%s', '%s', '%s', '%s', '%s', %s, %s, '%s')", emailId, firstName, lastName, address, city, state, zip,  phoneNumber, dateAdded);
+			statement.executeUpdate(sql);
+			} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				throw new CustomJDBCException(ExceptionType.UNABLE_TO_ROLLBACK);
+			}
+			throw new CustomJDBCException(ExceptionType.UNABLE_TO_ADD_RECORD_TO_DB);
+		}
+		try(Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+			String sql = String.format("insert into address_details_addressbook_name " + 
+					"values ('%s', '%s')", emailId, addressBookName);
+			statement.executeUpdate(sql);
+		} catch(SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				throw new CustomJDBCException(ExceptionType.UNABLE_TO_ROLLBACK);
+			}
+			throw new CustomJDBCException(ExceptionType.UNABLE_TO_ADD_RECORD_TO_DB);
+		}
+		try {
+			connection.commit();
+		} catch (SQLException e) {
+			throw new CustomJDBCException(ExceptionType.UNABLE_TO_COMMIT);
+		} finally {
+			if(connection != null)
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					throw new CustomJDBCException(ExceptionType.UNABLE_TO_CLOSE_CONNECTION);
+				}
+		}
+		addressBookList.add(new ContactDetails(firstName, lastName, address, city, state, zip, phoneNumber, emailId));
 	}
 }

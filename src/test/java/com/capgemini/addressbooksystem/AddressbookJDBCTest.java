@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class AddressbookJDBCTest {
 	
 	public AddressBookDBService addressBookDBService;
@@ -46,5 +45,14 @@ public class AddressbookJDBCTest {
 		List<ContactDetails> addressBookListOnState = addressBookDBService.getAddressBookDataOnState("Karnataka");
 		Assert.assertEquals(1, addressBookListOnCity.size());
 		Assert.assertEquals(2, addressBookListOnState.size());
+	}
+	
+	@Test
+	public void givenNewContactEntry_WhenAdded_ShouldSyncWithDB() throws CustomJDBCException {
+		addressBookDBService.readContactsFromDB();
+		addressBookDBService.addContactEntryToDB("Pranav", "Kamra", "zipzap@gmail.com", "D-786", "Mysuru", "Tamil Nadu",
+												57456, 73673352, "2019-06-14", "Home");
+		boolean result = addressBookDBService.checkAddressBookInSyncWithDB("Pranav");
+		Assert.assertTrue(result);
 	}
 }
