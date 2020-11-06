@@ -17,11 +17,16 @@ import org.apache.logging.log4j.Logger;
 
 public class AddressBookDBService {
 
-	private List<ContactDetails> addressBookList = new ArrayList<>();
+	private List<ContactDetails> addressBookList;
 	private static final Logger log = LogManager.getLogger(AddressBookDBService.class);
 	private PreparedStatement preparedStatement;
 	private PreparedStatement preparedStatemetForRetrieval;
-
+	
+	public AddressBookDBService(List<ContactDetails> contactDetailsList) {
+		addressBookList = new ArrayList<>(contactDetailsList);
+	}
+	
+	public AddressBookDBService() {}
 	private Connection getConnection() throws CustomJDBCException {
 		String jdbcURL = "jdbc:mysql://localhost:3306/addressbook_service?useSSL=false";
 		String userName = "root";
