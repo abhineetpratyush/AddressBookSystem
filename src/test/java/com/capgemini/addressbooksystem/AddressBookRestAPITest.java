@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 public class AddressBookRestAPITest {
 	private static final Logger log = LogManager.getLogger(AddressBookRestAPITest.class);
@@ -22,16 +23,45 @@ public class AddressBookRestAPITest {
 
 	@Test
 	public void givenContactDetailsInJsonServer_WhenRetrieved_ShouldMatchCount() {
-		ContactDetails[] arraysOfContacts = getContactDetailsList();
+		ContactDetailsForRestAPI[] arraysOfContacts = getContactDetailsList();
 		addressBookDBService = new AddressBookDBService(Arrays.asList(arraysOfContacts));
-		int entries = addressBookDBService.countEntries();
+		int entries = addressBookDBService.countEntriesForRest();
 		Assert.assertEquals(3, entries);
 	}
 
-	private ContactDetails[] getContactDetailsList() {
+	private ContactDetailsForRestAPI[] getContactDetailsList() {
 		Response response = RestAssured.get("/addressbook");
 		log.info("CONTACT ENTRIES IN JSON SERVER:\n" + response.asString());
-		ContactDetails[] arrayOfContacts = new Gson().fromJson(response.asString(), ContactDetails[].class);
+		ContactDetailsForRestAPI[] arrayOfContacts = new Gson().fromJson(response.asString(), ContactDetailsForRestAPI[].class);
 		return arrayOfContacts;
+	}
+	
+	@Test
+	public void givenMuiltipleNewContactDetails_WhenAdded_ShouldMatch201ResponseAndCount() {
+		ContactDetailsForRestAPI[] arraysOfContacts = getContactDetailsList();
+		addressBookDBService = new AddressBookDBService(Arrays.asList(arraysOfContacts));
+		ContactDetailsForRestAPI[] arrayOfContactDetails = {
+				new ContactDetailsForRestAPI(4, "Ankush", "Sharan", "D-75", "Vadodara", "Gujarat", 353543, 3535252, "ankush@gmail.com"),
+				new ContactDetailsForRestAPI(5, "Karan", "Singh", "E-75", "London", "UK", 32343, 35323252, "karan@gmail.com"),
+				new ContactDetailsForRestAPI(6, "Rajendra", "Kushwaha", "F-75", "Brisbon", "Chile", 23232, 232424, "rajuking@gmail.com")
+		};
+		for(ContactDetailsForRestAPI contactEntry : arrayOfContactDetails) {
+		Response response = addContactEntryToJsonServer(contactEntry);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(201, statusCode);
+		
+		contactEntry = new Gson().fromJson(response.asString(), ContactDetailsForRestAPI.class);
+		addressBookDBService.addContactToAddressBook(contactEntry);
+		}
+		int entries = addressBookDBService.countEntriesForRest();
+		Assert.assertEquals(6, entries);
+	}
+
+	private Response addContactEntryToJsonServer(ContactDetailsForRestAPI contactEntry) {
+		String addressJson = new Gson().toJson(contactEntry);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(addressJson);
+		return request.post("/addressbook");
 	}
 }

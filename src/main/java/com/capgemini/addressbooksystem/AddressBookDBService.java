@@ -18,12 +18,13 @@ import org.apache.logging.log4j.Logger;
 public class AddressBookDBService {
 
 	private List<ContactDetails> addressBookList;
+	private List<ContactDetailsForRestAPI> addressBookListForRest;
 	private static final Logger log = LogManager.getLogger(AddressBookDBService.class);
 	private PreparedStatement preparedStatement;
 	private PreparedStatement preparedStatemetForRetrieval;
 	
-	public AddressBookDBService(List<ContactDetails> contactDetailsList) {
-		addressBookList = new ArrayList<>(contactDetailsList);
+	public AddressBookDBService(List<ContactDetailsForRestAPI> contactDetailsList) {
+		addressBookListForRest = new ArrayList<>(contactDetailsList);
 	}
 	
 	public AddressBookDBService() {}
@@ -253,5 +254,15 @@ public class AddressBookDBService {
 
 	public int countEntries() {
 		return addressBookList.size();
+	}
+	
+	public int countEntriesForRest() {
+		return addressBookListForRest.size();
+	}
+
+	public void addContactToAddressBook(ContactDetailsForRestAPI contactEntry) {
+		this.addressBookListForRest.add(new ContactDetailsForRestAPI(contactEntry.id, contactEntry.firstName, 
+				contactEntry.lastName, contactEntry.address, contactEntry.city, 
+				contactEntry.state, contactEntry.zip, contactEntry.phoneNo, contactEntry.emailId));
 	}
 }
