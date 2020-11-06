@@ -1,6 +1,7 @@
 package com.capgemini.addressbooksystem;
 
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -211,5 +214,39 @@ public class AddressBookDBService {
 				}
 		}
 		addressBookList.add(new ContactDetails(firstName, lastName, address, city, state, zip, phoneNumber, emailId));
+	}
+
+	public void addMultipleContactsToDB(List<ContactDetailsForMultithreading> contactDetailsDataList) {
+		Map<Integer, Boolean> contactAdditionStatus = new HashMap<>();
+		contactDetailsDataList.forEach(contactEntry ->
+		{
+			Runnable task = () -> {
+				contactAdditionStatus.put(contactEntry.hashCode(), false);
+				log.info("Contact Entry Being Added: "+Thread.currentThread().getName());
+				try {
+					this.addContactEntryToDB(contactEntry.firstName, contactEntry.lastName, contactEntry.emailId, contactEntry.address, 
+							contactEntry.city, contactEntry.state, contactEntry.zip, 
+							contactEntry.phoneNo, contactEntry.dateAdded, contactEntry.addressBookName);
+				} catch (CustomJDBCException e) {
+					log.info("Unable to add contact entry to DB");
+				}
+				contactAdditionStatus.put(contactEntry.hashCode(), true);
+				log.info("Contact Entry Added: " + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, contactEntry.firstName);
+			thread.start();
+		}
+				);
+		while(contactAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			} catch(InterruptedException e) {
+				log.info("Unable to sleep");
+			}
+		}
+	}
+
+	public int countEntries() {
+		return addressBookList.size();
 	}
 }
