@@ -1,7 +1,6 @@
 package com.capgemini.addressbooksystem;
 
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -75,6 +74,13 @@ public class AddressBookDBService {
 	
 	private ContactDetails getContact(String firstName) {
 		return this.addressBookList.stream()
+				.filter(addressBookDataItem -> addressBookDataItem.firstName.equals(firstName))
+				.findFirst()
+				.orElse(null);
+	}
+	
+	public ContactDetailsForRestAPI getContactForRest(String firstName) {
+		return this.addressBookListForRest.stream()
 				.filter(addressBookDataItem -> addressBookDataItem.firstName.equals(firstName))
 				.findFirst()
 				.orElse(null);
@@ -264,5 +270,11 @@ public class AddressBookDBService {
 		this.addressBookListForRest.add(new ContactDetailsForRestAPI(contactEntry.id, contactEntry.firstName, 
 				contactEntry.lastName, contactEntry.address, contactEntry.city, 
 				contactEntry.state, contactEntry.zip, contactEntry.phoneNo, contactEntry.emailId));
+	}
+
+	public void updateContactCityRestAPI(String firstName, String newCity) {
+		ContactDetailsForRestAPI contactData = this.getContactForRest(firstName);
+		if(contactData != null) 
+			contactData.city = newCity;
 	}
 }

@@ -1,6 +1,7 @@
 package com.capgemini.addressbooksystem;
 
 import java.util.Arrays;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -63,5 +64,20 @@ public class AddressBookRestAPITest {
 		request.header("Content-Type", "application/json");
 		request.body(addressJson);
 		return request.post("/addressbook");
+	}
+	
+	@Test
+	public void givenContactEntry_WhenCityUpdated_ShouldMatch200Response() {
+		ContactDetailsForRestAPI[] arraysOfContacts = getContactDetailsList();
+		addressBookDBService = new AddressBookDBService(Arrays.asList(arraysOfContacts));
+		addressBookDBService.updateContactCityRestAPI("Karan", "Madrid");
+		ContactDetailsForRestAPI contactData = addressBookDBService.getContactForRest("Karan");
+		String addressJson = new Gson().toJson(contactData);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(addressJson);
+		Response response = request.put("/addressbook/" + contactData.id);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
 	}
 }
