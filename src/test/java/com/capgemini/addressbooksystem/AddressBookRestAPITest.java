@@ -80,4 +80,19 @@ public class AddressBookRestAPITest {
 		int statusCode = response.getStatusCode();
 		Assert.assertEquals(200, statusCode);
 	}
+	
+	@Test
+	public void givenContactEntry_WhenDeleted_ShouldMatch200Count() {
+		ContactDetailsForRestAPI[] arraysOfContacts = getContactDetailsList();
+		addressBookDBService = new AddressBookDBService(Arrays.asList(arraysOfContacts));
+		ContactDetailsForRestAPI contactData = addressBookDBService.getContactForRest("Ankush");
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		Response response = request.delete("/addressbook/" + contactData.id);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
+		addressBookDBService.deleteContactFromAddressBook(contactData.firstName);
+		int entries = addressBookDBService.countEntriesForRest();
+		Assert.assertEquals(5, entries);
+	}
 }

@@ -277,4 +277,9 @@ public class AddressBookDBService {
 		if(contactData != null) 
 			contactData.city = newCity;
 	}
+
+	public void deleteContactFromAddressBook(String firstName) {
+		ContactDetailsForRestAPI contactData = this.getContactForRest(firstName);
+		addressBookListForRest.remove(contactData);
+	}
 }
